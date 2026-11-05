@@ -16,9 +16,9 @@ class JoinScreen extends StatelessWidget {
   const JoinScreen({super.key});
 
   static Route<void> route() => MaterialPageRoute<void>(
-        settings: const RouteSettings(name: RouteNames.join),
-        builder: (_) => const JoinScreen(),
-      );
+    settings: const RouteSettings(name: RouteNames.join),
+    builder: (_) => const JoinScreen(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +30,17 @@ class JoinScreen extends StatelessWidget {
       child: const _JoinView(),
     );
   }
+
+  static Route<void> fadeRoute() => PageRouteBuilder<void>(
+    settings: const RouteSettings(name: RouteNames.join),
+    transitionDuration: const Duration(milliseconds: 800),
+    reverseTransitionDuration: const Duration(milliseconds: 300),
+    pageBuilder: (_, __, ___) => const JoinScreen(),
+    transitionsBuilder: (_, animation, __, child) => FadeTransition(
+      opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+      child: child,
+    ),
+  );
 }
 
 class _JoinView extends StatefulWidget {
@@ -52,7 +63,9 @@ class _JoinViewState extends State<_JoinView> {
     super.dispose();
   }
 
-  Future<void> _run(Future<JoinOutcome> Function(JoinController c) action) async {
+  Future<void> _run(
+    Future<JoinOutcome> Function(JoinController c) action,
+  ) async {
     if (_navigating) return;
     final controller = context.read<JoinController>();
     final outcome = await action(controller);
@@ -62,11 +75,15 @@ class _JoinViewState extends State<_JoinView> {
     switch (outcome) {
       case OpenChat(:final roomCode, :final identity):
         _navigating = true;
-        await navigator.push(ChatScreen.route(ChatArgs(roomCode: roomCode, identity: identity)));
+        await navigator.push(
+          ChatScreen.route(ChatArgs(roomCode: roomCode, identity: identity)),
+        );
         _onReturned();
       case OpenReveal(:final room, :final identity):
         _navigating = true;
-        await navigator.push(RevealScreen.route(RevealArgs(room: room, identity: identity)));
+        await navigator.push(
+          RevealScreen.route(RevealArgs(room: room, identity: identity)),
+        );
         _onReturned();
       case JoinFailed():
       case JoinCancelled():
@@ -93,7 +110,8 @@ class _JoinViewState extends State<_JoinView> {
   Widget build(BuildContext context) {
     final controller = context.watch<JoinController>();
     final status = controller.status;
-    final hasError = status == JoinStatus.notFound || status == JoinStatus.failed;
+    final hasError =
+        status == JoinStatus.notFound || status == JoinStatus.failed;
 
     return Scaffold(
       backgroundColor: AppColors.joinBackground,
@@ -139,14 +157,22 @@ class _JoinViewState extends State<_JoinView> {
                                 ),
                               )
                             : (hasError && controller.message != null)
-                                ? Text(controller.message!,
-                                    textAlign: TextAlign.center, style: AppText.error)
-                                : null,
+                            ? Text(
+                                controller.message!,
+                                textAlign: TextAlign.center,
+                                style: AppText.error,
+                              )
+                            : null,
                       ),
                     ),
                     TextButton(
-                      onPressed: controller.isBusy ? null : () => _run((c) => c.create()),
-                      child: const Text('Create a new room', style: AppText.link),
+                      onPressed: controller.isBusy
+                          ? null
+                          : () => _run((c) => c.create()),
+                      child: const Text(
+                        'Create a new room',
+                        style: AppText.link,
+                      ),
                     ),
                     const Spacer(flex: 6),
                   ],
@@ -165,13 +191,19 @@ class _KeyBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    return Container(
       width: 68,
       height: 68,
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: AppColors.keyCircle, shape: BoxShape.circle),
-        // Swap for the exported Figma key icon (SVG) if it differs.
-        child: Icon(Icons.key_rounded, color: AppColors.lime, size: 30),
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        color: AppColors.keyCircle,
+        shape: BoxShape.circle,
+      ),
+      child: Image.asset(
+        'assets/app_key.png',
+        width: 48, // make it smaller
+        height: 48,
+        fit: BoxFit.contain,
       ),
     );
   }

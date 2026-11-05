@@ -1,3 +1,4 @@
+import 'package:capassignment/features/splash/view/splash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,7 +25,9 @@ class RumourApp extends StatefulWidget {
 }
 
 class _RumourAppState extends State<RumourApp> {
-  late final LeakGuardObserver? _leakGuard = widget.enableLeakGuard ? LeakGuardObserver() : null;
+  late final LeakGuardObserver? _leakGuard = widget.enableLeakGuard
+      ? LeakGuardObserver()
+      : null;
 
   @override
   void dispose() {
@@ -41,8 +44,10 @@ class _RumourAppState extends State<RumourApp> {
         title: 'Rumour',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.dark,
-        initialRoute: RouteNames.join,
-        onGenerateRoute: AppRouter.onGenerateRoute,
+        initialRoute: RouteNames.splash,
+        onGenerateRoute: (settings) => settings.name == RouteNames.splash
+            ? SplashScreen.route()
+            : AppRouter.onGenerateRoute(settings),
         navigatorObservers: <NavigatorObserver>[if (guard != null) guard],
         builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light.copyWith(
