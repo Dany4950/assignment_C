@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "194316633027",
+    "project_id": "capslock-99dad",
+    "storage_bucket": "capslock-99dad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194316633027:android:b51c1d54fc70f8495d7376",
+        "android_client_info": {
+          "package_name": "com.example.capassignment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqXh6kmgpoWG4GOBTeAcH33-p30Vx2k1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
